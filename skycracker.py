@@ -1,66 +1,46 @@
 import os
-import subprocess
+from tools.ping import ping
+from tools.nmap_scan import nmap_scan
+from tools.nikto_scan import nikto_scan
+from tools.hydra_attack import hydra_attack
+from tools.netstat import netstat
+from tools.dns_lookup import dns_lookup
+from tools.john_the_ripper import john_the_ripper
+from tools.sqlmap_scan import sqlmap_scan
+from tools.dirb_scan import dirb_scan
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+from termcolor import colored
+
 def banner():
-    print(r"""
+    print(colored(r"""
       ██████████████████████████████████████████████████
       ███▄─▄███─▄▄─█─▄▄─█▄─▄▄▀█▄─█─▄█─▄▄─█▄─▄▄─█▄─▄▄▀███
       ████─██▀█─██─█─██─██─▄─▄██─▄▀██─██─██─▄█▀██─▄─▄███
       ██▀▄▄▄▄▄▀▄▄▄▄▀▄▄▄▄▀▄▄▀▄▄▀▄▄▀▄▄▀▄▄▄▄▀▄▄▄▄▄▀▄▄▀▄▄▀██
-              
+
               SKYCRACKER - Cybersecurity Toolkit
-    """)
-    print("""
+    """, 'green'))
+    print(colored("""
     [1] Ping um servidor
     [2] Escanear portas (Nmap)
     [3] Verificar vulnerabilidades (Nikto)
     [4] Brute Force com Hydra
     [5] Exibir serviços ativos (Netstat)
     [6] Checagem de DNS (nslookup)
+    [7] Quebrar hashes (John the Ripper)
+    [8] Scan de SQL Injection (SQLMap)
+    [9] Brute force de diretórios (Dirb)
     [0] Sair
-    """)
-
-def ping():
-    host = input("Digite o endereço do servidor: ")
-    subprocess.run(["ping", host])
-
-def nmap_scan():
-    target = input("Digite o IP ou domínio do alvo: ")
-    print("\n[1] Varredura padrão")
-    print("[2] Varredura stealth (TCP SYN Scan - nmap -sS)")
-    tipo = input("Escolha o tipo de varredura: ")
-    if tipo == "2":
-        subprocess.run(["nmap", "-sS", target])
-    else:
-        subprocess.run(["nmap", target])
-
-def nikto_scan():
-    target = input("Digite o endereço do servidor web (ex: http://exemplo.com): ")
-    subprocess.run(["nikto", "-h", target])
-
-def hydra_attack():
-    service = input("Digite o serviço (ex: ssh, http): ")
-    target = input("Digite o IP ou domínio do alvo: ")
-    user = input("Digite o nome de usuário: ")
-    wordlist = input("Digite o caminho da wordlist: ")
-    subprocess.run(["hydra", "-l", user, "-P", wordlist, target, service])
-
-def netstat():
-    command = "netstat -an" if os.name == 'nt' else "ss -tunap"
-    subprocess.run(command, shell=True)
-
-def dns_lookup():
-    domain = input("Digite o domínio: ")
-    subprocess.run(["nslookup", domain])
+    """, 'yellow'))
 
 def main():
     while True:
         clear()
         banner()
-        opcao = input("Escolha uma opção: ")
+        opcao = input(colored("Escolha uma opção: ", 'blue'))
 
         if opcao == "1":
             ping()
@@ -74,13 +54,19 @@ def main():
             netstat()
         elif opcao == "6":
             dns_lookup()
+        elif opcao == "7":
+            john_the_ripper()
+        elif opcao == "8":
+            sqlmap_scan()
+        elif opcao == "9":
+            dirb_scan()
         elif opcao == "0":
-            print("Saindo...")
+            print(colored("Saindo...", 'red'))
             break
         else:
-            print("Opção inválida.")
+            print(colored("Opção inválida.", 'red'))
 
-        input("\nPressione Enter para continuar...")
+        input(colored("\nPressione Enter para continuar...", 'blue'))
 
 if __name__ == "__main__":
     main()
